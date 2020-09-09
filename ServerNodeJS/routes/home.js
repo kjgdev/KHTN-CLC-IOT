@@ -1,9 +1,14 @@
 module.exports = function (app) {
+    app.get('/register', function (req, res) {
+        res.render('register');
+    });
+
     app.get('/home', function (req, res) {
         res.render('home');
     });
 
     app.post('/open', function (req, res) {
+        console.log("aaaaaa");
         var fs = require('fs');
         fs.writeFile('./file/data.txt', 1, (err) => {
             if (err) return console.log(err);
@@ -35,6 +40,5 @@ module.exports = function (app) {
             if (err) return console.log(err);
             res.status = 200;
         });
-
     });
 }
