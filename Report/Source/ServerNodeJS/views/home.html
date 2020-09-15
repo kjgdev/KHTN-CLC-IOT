@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ESP32-Camera-RingBell</title>
+    <meta charset="utf-8">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="/javascripts/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="/javascripts/bootstrap.min.js" type="text/javascript"></script>
+    <style type="text/css">
+        .panel-body {
+            padding: 30px 50px 0 30px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .panel-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+    <script type="text/javascript">
+        function OpenDoor() {
+            $.ajax({
+                url: '/open',
+                type: 'POST',
+                data: "",
+                success: function (data, status) {
+                },
+                error: function (data, err) {
+                }
+            });
+        }
+
+        function CloseDoor() {
+            $.ajax({
+                url: '/close',
+                type: 'POST',
+                data: "",
+                success: function (data, status) {
+                },
+                error: function (data, err) {
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container web-body" style="margin-top:10px;width: 1000px;">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="height: 50px;">
+                        <div class="panel-title" style="text-align: center">CAMERA</div>
+                    </div>
+                    <div class="panel-body">
+                        <form action="#" class="form-horizontal" role="form" method="post">
+                            <img src="" border-style: 2px solid;
+                                style="height: 388px;;width: 388px;border: 2px solid red; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <input type="button" class="btn btn-success btn-block" onclick="OpenDoor()"
+                                    value="Open Door" />
+                            </div>
+                            <div class="form-group">
+                                <input type="button" class="btn btn-success btn-block" onclick="CloseDoor()"
+                                    value="Close Door" />
+                            </div>
+                            <script>
+                                const img = document.querySelector('img');
+                                const WS_URL = 'ws:///192.168.1.88:8888';
+                                const ws = new WebSocket(WS_URL);
+                                let urlObject;
+                                ws.onopen = () => console.log(`Connected to ${WS_URL}`);
+                                ws.onmessage = message => {
+                                    const arrayBuffer = message.data;
+                                    if (urlObject) {
+                                        URL.revokeObjectURL(urlObject);
+                                    }
+                                    urlObject = URL.createObjectURL(new Blob([arrayBuffer]));
+                                    img.src = urlObject;
+                                }
+                            </script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
